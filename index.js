@@ -55,9 +55,10 @@ app.post('/getItemList', controllers.getItemList)
 // app.post("/setdata", controllers.setdata)
 //app.post("/linkpostsave", controllers.linkpostsave)
 
-app.listen(process.env.PORT || params.port, async () => {
+let port =  process.env.PORT || params.port
+app.listen( port, async () => {
   connection.connectToServer( function( err, client ) {
     if (err) console.log(err);
   } );
-  console.log(`app listening at http://localhost:` + process.env.PORT || params.port)
+  console.log(`app listening at http://localhost:` + port)
 })
