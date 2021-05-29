@@ -16,8 +16,9 @@ async function generate(n) {
 
 var transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    port: 587,
+    ignoreTLS: false,
+    secure: false,
     auth: {
         user: constantParams.authEmail,
         pass: constantParams.password //replace your email and password here
