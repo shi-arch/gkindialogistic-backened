@@ -2,6 +2,7 @@
 const connection = require('../connection/connection')
 const nodemailer = require("nodemailer");
 const constantParams = require('../constants/constant');
+var smtpTransport = require('nodemailer-smtp-transport');
 
 async function generate(n) {
     var add = 1, max = 12 - add;
@@ -14,16 +15,25 @@ async function generate(n) {
     return ("" + number).substring(add);
 }
 
-var transporter = nodemailer.createTransport({
+// var transporter = nodemailer.createTransport({
+//     host: 'smtp.gmail.com',
+//     port: 587,
+//     ignoreTLS: false,
+//     secure: false,
+//     auth: {
+//         user: constantParams.authEmail,
+//         pass: constantParams.password //replace your email and password here
+//     }
+// });
+
+var transporter = nodemailer.createTransport(smtpTransport({
+    service: 'gmail',
     host: 'smtp.gmail.com',
-    port: 587,
-    ignoreTLS: false,
-    secure: false,
     auth: {
         user: constantParams.authEmail,
         pass: constantParams.password //replace your email and password here
     }
-});
+  }));
 
 async function getnewuserModel(body) {
     let dbConn = connection.getDb()
