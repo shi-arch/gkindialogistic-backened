@@ -19,6 +19,7 @@ const constantParams = {
     existMsg: 'email already exists',
     mailNotSent: 'email not sent',
     notSave: 'details are not saved to db',
+    requestMsg: 'request successfully raised',
     succesMsg: 'verification successfull ... !',
     mailNotExist: 'email does not exists',
     otpCheck: 'please check the otp',

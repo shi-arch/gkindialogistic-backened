@@ -51,6 +51,16 @@ async function getItemList(req, res) {
   }
   res.send(result)
 }
+
+async function getAllCategories(req, res) {
+  const response = await models.getAllCategories()
+  if (response.status) {
+    result = await status.success(response)
+  } else {
+    result = await status.error(response)    
+  }
+  res.send(result)
+}
 // async function uploadProfilePicture(req, res, err) {
 //   try {
 //     if (err) {
@@ -184,6 +194,7 @@ module.exports = {
   getItemList: getItemList,
   getnewuserController: getnewuserController,
   otpVerification: otpVerification,
+  getAllCategories: getAllCategories
   // registration: registration,
   // logout: logout,
   // adminapproval: adminapproval,

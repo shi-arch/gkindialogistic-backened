@@ -85,11 +85,22 @@ async function getItemList() {
     const collection = await dbConn.collection("product_list");
     let response = await collection.find({}).toArray()
     if (response && response.length) {
-        return { data: response, message: constantParams.succesMsg, status: true }
+        return { data: response, message: constantParams.requestMsg, status: true }
     } else {
         return { data: {}, message: constantParams.otpCheck, status: false }
     }
 }
+async function getAllCategories() {
+    let dbConn = connection.getDb()
+    const collection = await dbConn.collection("category_list");
+    let response = await collection.find({}).toArray()
+    if (response && response.length) {
+        return { data: response, message: constantParams.requestMsg, status: true }
+    } else {
+        return { data: {}, message: constantParams.otpCheck, status: false }
+    }
+}
+
 
 // async function registration(body) {
 //     let dbConn = connection.getDb()
@@ -240,7 +251,8 @@ async function getItemList() {
 module.exports = {
     getnewuserModel: getnewuserModel,
     otpVerification: otpVerification,
-    getItemList: getItemList
+    getItemList: getItemList,
+    getAllCategories: getAllCategories
     // registration: registration,
     // logout: logout,
     // adminapproval: adminapproval,
