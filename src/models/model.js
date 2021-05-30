@@ -33,37 +33,41 @@ var transporter = nodemailer.createTransport(smtpTransport({
         user: constantParams.authEmail,
         pass: constantParams.password //replace your email and password here
     }
-  }));
+}));
 
 async function getnewuserModel(body) {
-    let dbConn = connection.getDb()
-    const collection = await dbConn.collection("users");
-    
-    let otp = await generate(6)
-    if (body.email) {
-        const isEmailExists = await collection.findOne({ email: body.email })
-        if (isEmailExists == null) {
-            let response = await collection.insertOne({ email: body.email, isEmailVerified: false, otp: otp })
-            if (response !== null) {
-                var mailOptions = {
-                    from: 'testshivramkashyap512@gmail.com',
-                    to: body.email,
-                    subject: constantParams.subject,
-                    html: "<h3>Please use this otp to verify its you</h3> : " + "<span>" + otp + "</span>"
-                };
-                let result = await transporter.sendMail(mailOptions);
-                if (result && result.response) {
-                    return { data: {}, message: constantParams.otpSent, status: true }
+    try {
+        let dbConn = connection.getDb()
+        const collection = await dbConn.collection("users");
+        let otp = await generate(6)
+        if (body.email) {
+            const isEmailExists = await collection.findOne({ email: body.email })
+            if (isEmailExists == null) {
+                let response = await collection.insertOne({ email: body.email, isEmailVerified: false, otp: otp })
+                if (response !== null) {
+                    var mailOptions = {
+                        from: 'testshivramkashyap512@gmail.com',
+                        to: body.email,
+                        subject: constantParams.subject,
+                        html: "<h3>Please use this otp to verify its you</h3> : " + "<span>" + otp + "</span>"
+                    };
+                    let result = await transporter.sendMail(mailOptions);
+                    if (result && result.response) {
+                        return { data: {}, message: constantParams.otpSent, status: true }
+                    }
+                } else {
+                    return { data: {}, message: constantParams.authFail, status: false }
                 }
             } else {
-                return { data: {}, message: constantParams.authFail, status: false }
+                return { data: {}, message: 'email already exists', status: false }
             }
         } else {
-            return { data: {}, message: 'email already exists', status: false }
+            return { data: {}, message: constantParams.authFail, status: false }
         }
-    } else {
-        return { data: {}, message: constantParams.authFail, status: false }
+    } catch (err) {
+        console.log(err, '>>>>>>>>>>>>>>>>>>>>');
     }
+
 }
 
 async function otpVerification(otp) {
