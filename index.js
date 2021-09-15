@@ -46,6 +46,7 @@ app.get('/', function(req, res){
   res.send('Welcome to GKINDIALOGISTICS backened')
 })
 app.post('/userlist', controllers.getUserlist)
+app.post('/adminlogin', controllers.adminLogin)
 app.post('/getnewuser', controllers.getnewuserController)
 app.post('/otpverification', controllers.otpVerification)
 app.post('/getitemList', controllers.getItemList)

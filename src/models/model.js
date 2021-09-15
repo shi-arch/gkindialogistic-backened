@@ -110,11 +110,21 @@ async function getUserlist() {
     let dbConn = connection.getDb()
     const collection = await dbConn.collection("userlist");
     let response = await collection.find({}).toArray()
-    console.log(response,'rrrrrrrrrrrrr')
     if (response && response.length) {
         return { data: response, message: constantParams.requestMsg, status: true }
     } else {
         return { data: {}, message: constantParams.otpCheck, status: false }
+    }
+}
+
+async function adminLogin(body) {
+    let dbConn = connection.getDb()
+    const collection = await dbConn.collection("userlist");
+    const response = await collection.findOne({ email: body.email, admin: true, password: body.password })
+    if (response && response.email) {
+        return { data: response, message: "Admin login successfull", status: true }
+    } else {
+        return { data: {}, message: "Please enter the correct credentials", status: false }
     }
 }
 
@@ -270,7 +280,8 @@ module.exports = {
     otpVerification: otpVerification,
     getItemList: getItemList,
     getAllCategories: getAllCategories,
-    getUserlist: getUserlist
+    getUserlist: getUserlist,
+    adminLogin: adminLogin
     // registration: registration,
     // logout: logout,
     // adminapproval: adminapproval,
