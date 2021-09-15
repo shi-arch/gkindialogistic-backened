@@ -15,7 +15,7 @@ module.exports = {
                 } else {
                     console.log('Connection successfull...!');
                 }
-                dbConn = client.db("Fairdeelz")
+                dbConn = client.db("gkindialogisticsdb")
                 return callback( err );
             });
         } catch (err){

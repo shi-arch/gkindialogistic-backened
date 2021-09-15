@@ -1,6 +1,6 @@
 const constantParams = {
     port: 5000,
-    mongoDbConnectionUri : "mongodb+srv://shivram:Sonalidubey@512@cluster0.vctwu.mongodb.net/test?retryWrites=true&w=majority",
+    mongoDbConnectionUri : "mongodb+srv://shiv:Sonalidubey@512@cluster0.4k87x.mongodb.net/test?retryWrites=true&w=majority",
     emailMsg: 'Email or password is missing',
     missingMsg: 'some data is missing',
     otpMsg: 'otp is missing',

@@ -106,6 +106,19 @@ async function getAllCategories() {
 }
 
 
+async function getUserlist() {
+    let dbConn = connection.getDb()
+    const collection = await dbConn.collection("userlist");
+    let response = await collection.find({}).toArray()
+    console.log(response,'rrrrrrrrrrrrr')
+    if (response && response.length) {
+        return { data: response, message: constantParams.requestMsg, status: true }
+    } else {
+        return { data: {}, message: constantParams.otpCheck, status: false }
+    }
+}
+
+
 // async function registration(body) {
 //     let dbConn = connection.getDb()
 //     const collection = await dbConn.collection("userData");
@@ -256,7 +269,8 @@ module.exports = {
     getnewuserModel: getnewuserModel,
     otpVerification: otpVerification,
     getItemList: getItemList,
-    getAllCategories: getAllCategories
+    getAllCategories: getAllCategories,
+    getUserlist: getUserlist
     // registration: registration,
     // logout: logout,
     // adminapproval: adminapproval,

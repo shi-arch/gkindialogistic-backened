@@ -43,8 +43,9 @@ var upload = multer({
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.get('/', function(req, res){
-  res.send('Welcome to fairdeelz')
+  res.send('Welcome to GKINDIALOGISTICS backened')
 })
+app.post('/userlist', controllers.getUserlist)
 app.post('/getnewuser', controllers.getnewuserController)
 app.post('/otpverification', controllers.otpVerification)
 app.post('/getitemList', controllers.getItemList)
