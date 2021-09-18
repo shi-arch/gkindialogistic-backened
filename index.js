@@ -10,7 +10,7 @@ const path = require("path")
 var cors = require('cors');
 
 // use it before all route definitions
-app.use(cors({origin: 'https://gkindialogistic.herokuapp.com/'}));
+app.use(cors({origin: 'http://gkindialogistics.com'}));
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
