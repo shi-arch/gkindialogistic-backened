@@ -9,16 +9,15 @@ async function getallparcel(body) {
         {
             $group: {
                 _id: null,
-                count: {$sum: 1}
+                count: { $sum: 1 }
             }
         }
-    ]).toArray() 
+    ]).toArray()
     let response = await collection.aggregate([
-        { $skip : body.skip }, {$limit: body.limit }
-    ]).toArray() 
-    console.log(response,'sssssssssssssssssssss')  
+        { $skip: body.skip }, { $limit: body.limit }
+    ]).toArray()
     if (response && response.length) {
-        return { data: {count : totalCount[0].count, data: response}, message: "Here is your all parcels", status: true }
+        return { data: { count: totalCount[0].count, data: response }, message: "Here is your all parcels", status: true }
     } else {
         return { data: {}, message: "No parcel found", status: false }
     }
@@ -31,14 +30,14 @@ async function generateparcel(body) {
         {
             $group: {
                 _id: null,
-                maxQuantity: {$max: "$parcelNumber"}
+                maxQuantity: { $max: "$parcelNumber" }
             }
         }
-    ]).toArray()   
+    ]).toArray()
     if (response && response.length) {
         body.parcelNumber = response[0].maxQuantity + 1
     } else {
-        body.parcelNumber = 1     
+        body.parcelNumber = 1
     }
     let result = await collection.insertOne(body)
     if (result !== null) {
@@ -52,18 +51,28 @@ async function generateparcel(body) {
 
 async function searchparcel(body) {
     let dbConn = connection.getDb()
-    const collection = await dbConn.collection("parcelData"); 
-    let obj = {} 
-    if(body.type == "Enter Mobile Number"){
+    const collection = await dbConn.collection("parcelData");
+    let obj = {}
+    if (body.type == "Enter Mobile Number") {
         obj.contact = body.contact
     }
-    
-    if(body.type == "Enter Parcel Id"){
+    if (body.type == "Enter Parcel Id") {
         obj.parcelNumber = JSON.parse(body.parcelNumber.charAt(4))
-    }  
-    const response = await collection.find(obj).toArray()
+    }
+    const count = await collection.aggregate([
+        {
+            $match: {...obj}
+        },
+        {
+            $count: "parcel_count_by_id"
+        }
+    ]).toArray()
+    let response = await collection.aggregate([
+        { $match: obj },
+        { $skip: body.skip }, { $limit: body.limit }
+    ]).toArray()
     if (response && response.length) {
-        return { data: response, message: "Parcel details found successfully", status: true }
+        return { data: { count: count[0].parcel_count_by_id, data: response }, message: "Parcel details found successfully", status: true }
     } else {
         return { data: {}, message: "Parcel not found", status: false }
     }
@@ -72,15 +81,20 @@ async function searchparcel(body) {
 async function updateparcel(body) {
     let dbConn = connection.getDb()
     const collection = await dbConn.collection("parcelData");
-    let response = await collection.findOneAndUpdate(
-        { parcelNumber: body.parcelNumber },
-        { $set: { status: body.status } }
-    )
-    if (response && response.value !== null) {
-        return { data: response.value, message: "Parcel Status is updated successfully", status: true }
-    } else {
-        return { data: {}, message: "Something went wrong", status: false }
+    let responseArr = []
+    for (let i = 0; i < body.data.length; i++) {
+        let obj = body.data[i]
+        let response = await collection.findOneAndUpdate(
+            { parcelNumber: obj.parcelNumber },
+            { $set: { status: body.status } }
+        )
+        if (response && response.value !== null) {
+            responseArr.push(obj.parcelNumber + " => Parcel Status is updated successfully")
+        } else {
+            return { data: {}, message: "Something went wrong", status: false }
+        }
     }
+    return { data: {}, message: responseArr, status: true }
 }
 
 

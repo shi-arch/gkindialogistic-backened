@@ -11,7 +11,7 @@ var cors = require('cors');
 
 // use it before all route definitions
 app.use(cors({origin: 'http://gkindialogistics.com'}));
-
+//app.use(cors({origin: 'http://localhost:3000'}));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.get('/', function(req, res){
