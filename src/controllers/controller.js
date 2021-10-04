@@ -55,6 +55,17 @@ async function updateparcel(req, res){
   res.send(result)
 }
 
+async function deleteparcel(req, res){
+  const response = await models.deleteparcel(req.body)
+  if (response.status) {
+    result = await status.success(response)
+  } else {
+    result = await status.error(response)    
+  }
+  res.send(result)
+}
+
+
 async function adminLogin(req, res) {
   if(req && req.body){
     const response = await models.adminLogin(req.body)
@@ -76,5 +87,6 @@ module.exports = {
   searchparcel: searchparcel,
   generateparcel: generateparcel,
   updateparcel: updateparcel,
+  deleteparcel: deleteparcel,
   getallparcel: getallparcel
 }

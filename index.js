@@ -21,6 +21,7 @@ app.post('/userlist', controllers.getUserlist)
 app.post('/getallparcel', controllers.getallparcel)
 app.post('/searchparcel', controllers.searchparcel)
 app.post('/updateparcel', controllers.updateparcel)
+app.post('/deleteparcel', controllers.deleteparcel)
 app.post('/adminlogin', controllers.adminLogin)
 app.post('/generateparcel', controllers.generateparcel)
 

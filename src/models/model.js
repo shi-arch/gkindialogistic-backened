@@ -39,6 +39,9 @@ async function generateparcel(body) {
     } else {
         body.parcelNumber = 1
     }
+    let newDate = new Date()
+    body.bookingDate = newDate
+    body.lastStatusUpdate = newDate
     let result = await collection.insertOne(body)
     if (result !== null) {
         return { message: "Parcel number generated successfully", status: true }
@@ -86,7 +89,7 @@ async function updateparcel(body) {
         let obj = body.data[i]
         let response = await collection.findOneAndUpdate(
             { parcelNumber: obj.parcelNumber },
-            { $set: { status: body.status } }
+            { $set: { status: body.status, lastStatusUpdate: new Date() } }
         )
         if (response && response.value !== null) {
             responseArr.push(obj.parcelNumber + " => Parcel Status is updated successfully")
@@ -97,6 +100,23 @@ async function updateparcel(body) {
     return { data: {}, message: responseArr, status: true }
 }
 
+async function deleteparcel(body) {
+    let dbConn = connection.getDb()
+    const collection = await dbConn.collection("parcelData");
+    let responseArr = []
+    for (let i = 0; i < body.data.length; i++) {
+        let obj = body.data[i]
+        let response = await collection.findOneAndDelete(
+            { parcelNumber: obj.parcelNumber }
+        )
+        if (response && response.value !== null) {
+            responseArr.push(obj.parcelNumber + " => Parcel Status is deleted successfully")
+        } else {
+            return { data: {}, message: "Something went wrong", status: false }
+        }
+    }
+    return { data: {}, message: responseArr, status: true }
+}
 
 
 
@@ -128,5 +148,6 @@ module.exports = {
     generateparcel: generateparcel,
     searchparcel: searchparcel,
     getallparcel: getallparcel,
-    updateparcel: updateparcel
+    updateparcel: updateparcel,
+    deleteparcel: deleteparcel
 }
